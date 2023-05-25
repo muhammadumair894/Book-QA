@@ -2,7 +2,7 @@ import streamlit as st
 import pandas as pd
 import openai
 import json
-openai.api_key = "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"
+openai.api_key = ""
 # def add_columns_to_csv(df):
 #     # Add your logic to modify the DataFrame and add columns here
 #     df['New Column 1'] = 'Some value'
