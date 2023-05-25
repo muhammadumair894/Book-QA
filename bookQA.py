@@ -1,13 +1,14 @@
 import streamlit as st
 import pandas as pd
 import openai
+import os
 import json
-openai.api_key = ""
-# def add_columns_to_csv(df):
-#     # Add your logic to modify the DataFrame and add columns here
-#     df['New Column 1'] = 'Some value'
-#     df['New Column 2'] = [1, 2, 3, 4, 5]
-#     return df
+#openai.api_key = ""
+with st.sidebar:
+        
+        #os.environ['OPENAI_API_KEY'] = st.text_input('Your OpenAI API KEY', type="password")
+        openai.api_key = st.text_input('Your OpenAI API KEY', type="password")
+
 def gptcall(book):
   question = """
   1-What is the main idea or central theme of the book?
