@@ -1,38 +1,26 @@
 import streamlit as st
 import pandas as pd
 import openai
+import os
 import json
-#openai.api_key = ""
+qlist = ['What is the main idea or central theme of the book?',
+       'What are the key lessons or insights from the book, list 10 key lessons?',
+       'How can the lessons from the book be applied in daily life, list 5 lessons?',
+       'What are some counterarguments or points of disagreement regarding the books content, list 10 points ?',
+       'Are there any real-life examples or case studies mentioned in the book, list 5 examples?',
+       'What are the potential benefits or positive outcomes of applying the books teachings?',
+       'Are there any potential limitations or drawbacks to consider?']
 with st.sidebar:
+        
+        #os.environ['OPENAI_API_KEY'] = st.text_input('Your OpenAI API KEY', type="password")
         openai.api_key = st.text_input('Your OpenAI API KEY', type="password")
 
-def gptcall(book):
-  question = """
-  1-What is the main idea or central theme of the book?
-  This question helps readers understand the core concept or message that the author is conveying.
-
-  2-What are the key lessons or insights from the book, list 10 key lessons?
-  Summarize the main points and lessons learned to give readers a clear understanding of what they can take away from the book.
-
-  3-How can the lessons from the book be applied in daily life, list 5 lessons?
-  Provide practical examples and suggestions on how readers can implement the book's ideas and principles in their own lives.
-
-  4-What are some counterarguments or points of disagreement regarding the book's content, list 10 points ?
-  Present alternative perspectives or criticisms that exist surrounding the book's concepts or theories.
-
-  5-Are there any real-life examples or case studies mentioned in the book, list 5 examples?
-  Highlight any specific examples or stories that the author uses to support their arguments, demonstrating how the concepts have been applied in the real world.
-
-  6-What are the potential benefits or positive outcomes of applying the book's teachings?
-  Discuss the potential advantages, personal growth, or improvements that readers may experience by incorporating the book's principles into their lives.
-
-  7-Are there any potential limitations or drawbacks to consider?
-  Address any potential shortcomings or challenges that readers may face when attempting to apply the book's concepts, providing a balanced perspective
-  """
+def gptcall(book, question):
+ 
   out = openai.ChatCompletion.create(
     model="gpt-3.5-turbo",
     messages=[
-          {"role": "system", "content": "Act as an expert book reader and analyst, please provide detailed answers to the following seven questions, you need to create seven json keys for each question and data should be return with question number as key value. output sample {'1':answer 1, '2':answer 2, '3': answer 3}"},
+          {"role": "system", "content": "Act as an expert book reader and analyst, please provide detailed answers to the following question"},
           {"role": "user", "content": question},
           {"role": "user", "content": book}
       ]
@@ -48,17 +36,25 @@ def readdata(df):
   q1,q2,q3,q4,q5,q6,q7 = [],[],[],[],[],[],[]
 
   for book in df['BookName']:
-    temp =  gptcall(book)
-    print(temp)
-    json_object = json.loads(temp)
-    #json_object = json.loads(result)
-    q1.append(json_object['1'])
-    q2.append(json_object['2'])
-    q3.append(json_object['3'])
-    q4.append(json_object['4'])
-    q5.append(json_object['5'])
-    q6.append(json_object['6'])
-    q7.append(json_object['7'])
+
+    for i in range(len(qlist)):
+      res = gptcall(book, qlist[i])
+      if i == 0:
+        q1.append(res)
+      elif i == 1:
+        q2.append(res)
+      elif i == 2:
+        q3.append(res)
+      elif i == 3:
+        q4.append(res)
+      elif i == 4:
+        q5.append(res)
+      elif i == 5:
+        q6.append(res)
+      elif i == 6:
+        q7.append(res)
+      
+
 
   df['Q1'] = q1
   df['Q2'] = q2
