@@ -1,12 +1,9 @@
 import streamlit as st
 import pandas as pd
 import openai
-import os
 import json
 #openai.api_key = ""
 with st.sidebar:
-        
-        #os.environ['OPENAI_API_KEY'] = st.text_input('Your OpenAI API KEY', type="password")
         openai.api_key = st.text_input('Your OpenAI API KEY', type="password")
 
 def gptcall(book):
